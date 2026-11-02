@@ -1,0 +1,25 @@
+dsh-purge
+Copyright 2026 YuJunZhiXue
+
+Source: https://github.com/YuJunZhiXue/dsh-purge
+
+This product is licensed under the Apache License, Version 2.0.
+Derivative works must retain this NOTICE and attribution.
+
+--------------------------------------------------------------------------------
+
+dsh-houdini-preview
+Copyright 2026 ro-boduck
+
+Source: https://github.com/ro-boduck/dsh-houdini-preview
+
+A derivative build of dsh-purge, published under the Apache License 2.0 with the
+attribution required by the upstream NOTICE above. Changes from the upstream work:
+
+  1. Every user-facing string, system prompt, tool description and the dock UI
+     were translated from Chinese to English.
+  2. The "own-server" region guardrail in lib/net-scope.js was removed
+     (installRegionGate / publicHostHit / taskTargetHit / isCheatTask).
+  3. The visible dock label was renamed to "dsh-houdini-preview".
+
+The upstream name, copyright notice and source URL are retained in full.

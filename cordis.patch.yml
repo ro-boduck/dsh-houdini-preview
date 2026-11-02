@@ -1,0 +1,73 @@
+# dsh-houdini-preview bundle patch
+#
+# Both the Clean page and the drill console live inside this plugin
+# (lib/redteam, presets/redteam, skills/redteam).
+# Installing this plugin alone is enough — it does not link any external red-team package.
+
+# Disable the older standalone red-team packages (in case dsh-redteam-mode was installed before)
+- id: redteam-store
+  name: dsh-redteam-store
+  disabled: true
+
+- id: redteam-ui
+  name: dsh-redteam-ui
+  disabled: true
+
+- id: redteam-mode
+  name: dsh-redteam-mode
+  disabled: true
+
+- id: redteam-mode-store
+  name: dsh-redteam-mode/store
+  disabled: true
+
+- id: redteam-mode-ui
+  name: dsh-redteam-mode/ui
+  disabled: true
+
+- id: system-prompt
+  config:
+    includeHarnessIdentity: false
+    personaPrefix: ""
+    personaSuffix: ""
+
+# The main `insert` lives in the user-layer profile/cordis.patch.yml (postinstall / drill self-heal).
+# This layer only adjusts inject/config of an already-queued entry. Inserting again reports
+# "already queued" (#152 / #154 / #159).
+- id: dsh-purge
+  name: dsh-houdini-preview
+  inject: [systemPrompt, tools]
+  config:
+    enabled: true
+    autoApplyOnStart: false
+    autoUpdateOnStart: false
+    autoRevertOnMissing: false
+    injectOnce: false
+    stripMnemon: true
+    verbose: false
+    postPrompt: ""
+    postPromptOrder: 5100
+    autoRetry: true
+    retryMax: 3
+    autoContinue: false
+    continueMax: 3
+    continueText: "continue"
+    capabilityProtocol: true
+    hooksDenyBypass: true
+    anchorMode: auto
+    subagentControl: true
+
+- insert:
+    # Drill console: preset + skills (this plugin's lib/redteam)
+    - id: dsh-purge-redteam
+      name: dsh-houdini-preview/redteam
+
+    # Drill console fact database (SQLite); data lives in $DSH_HOME/redteam
+    - id: dsh-purge-redteam-store
+      name: dsh-houdini-preview/redteam/store
+      config:
+        root: !!js dshHomePath('redteam')
+
+    # Drill console HTTP bridge: POST /redteam/api
+    - id: dsh-purge-redteam-ui
+      name: dsh-houdini-preview/redteam/ui

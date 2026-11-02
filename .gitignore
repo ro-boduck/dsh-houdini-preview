@@ -1,0 +1,20 @@
+# dependencies / build output
+node_modules/
+pnpm-lock.yaml
+npm-debug.log*
+*.tsbuildinfo
+
+# editor / OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# upstream patch backups created by the plugin at runtime
+*.dshpurge.bak
+
+# local scratch
+*.local
+tmp/
+out/

@@ -1,0 +1,100 @@
+{
+  "name": "dsh-houdini-preview",
+  "version": "1.1.89",
+  "description": "dsh-purge preview build — English-only UI and prompts, own-server guardrail removed. DeepSeek Harness red-team plugin (jailbreak layer + drill console). Derivative of YuJunZhiXue/dsh-purge; attribution required.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": "./client.js",
+    "./redteam": "./lib/redteam/index.js",
+    "./redteam/store": "./lib/redteam/store.js",
+    "./redteam/ui": "./lib/redteam/ui.js",
+    "./redteam/tools": "./lib/redteam/tools.js",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "dsh-houdini-preview": "bin/dsh-purge.js",
+    "dsh-purge": "bin/dsh-purge.js"
+  },
+  "files": [
+    "lib",
+    "!lib/default-prompt-inject.md",
+    "bin",
+    "docs",
+    "presets",
+    "scripts",
+    "client.js",
+    "cordis.patch.yml",
+    "screenshots.json",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "embed-prompt": "node scripts/embed-default-prompt.mjs",
+    "build:client": "node scripts/build-client.mjs",
+    "postinstall": "node scripts/ensure-profile-bundle.mjs"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "dsh-plugins",
+    "deepseek-harness",
+    "harness-security",
+    "llm-security",
+    "red-team",
+    "security-testing",
+    "prompt-eval",
+    "instructions",
+    "rules",
+    "english"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ro-boduck/dsh-houdini-preview.git"
+  },
+  "homepage": "https://github.com/ro-boduck/dsh-houdini-preview#readme",
+  "bugs": {
+    "url": "https://github.com/ro-boduck/dsh-houdini-preview/issues"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    },
+    "install": {
+      "preferred": "tarball",
+      "tarball": "https://codeload.github.com/ro-boduck/dsh-houdini-preview/tar.gz/refs/heads/main",
+      "zip": "https://codeload.github.com/ro-boduck/dsh-houdini-preview/zip/refs/heads/main",
+      "git": "https://github.com/ro-boduck/dsh-houdini-preview.git"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dshTarget": "0.2.1-rc.2",
+  "dshTargets": [
+    "0.2.1-rc.2",
+    "0.2.1-rc.5"
+  ]
+}
