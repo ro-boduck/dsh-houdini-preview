@@ -229,6 +229,40 @@ docs/                   banner, preview screenshots, upstream READMEs
 
 ---
 
+## Troubleshooting
+
+### "Cleaning did not finish; restart cancelled"
+
+`ensureHostClean()` refuses to restart the host while any patch is still unresolved, and the original logic counted **every** `pending` patch as a blocker. On DSH 0.2.1-rc.5 one patch can never resolve:
+
+| patch | state | why |
+|---|---|---|
+| `#42 SETTINGS_LEGACY_API` | `pending` forever | the pattern was written for rc.2; rc.5's `dsh-settings/lib/index.js` already ships the target shape, so there is nothing left to rewrite |
+| `#82 DESKTOP_SHELL_PROFILE_FALLBACK` | `na` | optional, and the desktop shell text moved upstream |
+
+Because `#42` stayed `pending`, **every** Apply cancelled its restart. This build fixes it in two places:
+
+```js
+// 1. #42 is declared optional — it is a legacy-compat nicety, not a capability.
+optional: true,
+
+// 2. ensureHostClean() ignores optional patches when deciding whether a restart may proceed.
+const optionalIds = new Set(ALL_PATCHES.filter((p) => p?.optional === true).map((p) => String(p.id)));
+if (state === "pending" && !optionalIds.has(String(id))) ids.add(id);
+```
+
+Verified against a live rc.5 install:
+
+```
+total patches tracked : 86
+applied               : 67
+pending               : 1  #42
+pending that would still block a restart: 0 (none)
+RESULT: restart is no longer blocked by pending patches
+```
+
+Note that fixing `lib/core.js` only helps **after** the host reloads it — the running process still holds the old module. Restart the host once by hand (quit and reopen the desktop app, or restart `dsh web`); Apply works normally from then on.
+
 ## Compatibility notes
 
 - **Drop-in with upstream state.** Because the patch markers and the state directory keep their `dsh-purge` names, an existing `$DSH_HOME/dsh-purge` state directory and any already-applied host patches are recognised as-is. You do not need to revert before switching.
